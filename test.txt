@@ -1,0 +1,193 @@
+Вопросы по Spark
+1)	Блок кода, показанный ниже, содержит ошибку.
+Блок кода предназначен для возврата нового кадра данных, 
+в котором столбец division из StoreDF был переименован в столбец state, 
+а столбец managerName из StoreDF был переименован в столбец managerFullName. 
+Определите ошибку.
+
+Code block:
+(storesDF.withColumnRenamed("state", "division")
+.withColumnRenamed("managerFullName", "managerName"))
+
+D. Первым аргументом операции withColumnRenamed() должно быть имя старого столбца, а вторым аргументом должно быть имя нового столбца. 
+
+
+
+
+
+
+
+2)	Блок кода, показанный ниже, должен возвращать DataFrame, содержащий только строки из DataFrame StoresDF,
+где значение в столбце sqft меньше или равно 25 000 ИЛИ значение в столбце customerSatisfaction больше или равно 30. 
+Выберите ответ, который правильно заполняет пронумерованные пробелы в кодовом блоке для выполнения этой задачи.
+
+Code block:
+storesDF.__1__(__2__ __3__ __4__)
+A. 
+	1. filter
+	2. (col("sqft") <= 25000)
+	3. |
+	4. (col("customerSatisfaction") >= 30)
+
+
+
+
+
+
+3)	Дан DataFrame df, который включает в себя ряд столбцов,
+среди которых столбецы с именами quantity и price, завершите приведенный ниже код,
+так чтобы он создал DataFrame, включая все исходные столбцы и новый столбец revenue который рассчитывается как quantity*price:
+	df._1_(_2_ , _3_)
+
+Выберите ответ, который правильно заполняет пронумерованные пробелы в блоке кода, чтобы выполнить это задание.
+
+C. withColumn, "revenue", expr("quantity*price") 
+
+
+
+
+
+
+
+4)	Дан DataFrame df, который имеет некоторые нулевые значения в столбце created_date, завершите приведенный ниже код, чтобы он сортировал строки в порядке возрастания на основе столбца creted_date с последними нулевыми значениями.
+	
+	df._1_(_2_)
+
+Выберите ответ, который правильно заполняет пронумерованные пробелы в блоке кода, чтобы выполнить это задание.
+
+C. orderBy, col("created_date").asc_nulls_last() 
+
+
+
+
+
+
+5)	Какая из следующих команд НЕ запускает eager evaluation?
+
+C. df.show()
+
+
+
+
+
+
+
+
+6)	Какие из следующих утверждений НЕ верны для broadcast переменных?
+
+A. Broadcast переменные это общие неизменяемые переменные, которые кэшируются на каждой машине в кластере, а не сериализуются для каждой отдельной задачи.
+D. Broadcast предоставляет изменяемую переменную, которую кластер Spark’a может безопасно по строчно изменять. 
+
+
+
+
+
+
+
+7)	Приведенный ниже код должен возвращать новый DataFrame с 50 процентами случайных записей из DataFrame df без замены.
+
+df._1_(_2_,_3_,_4_)
+
+Выберите ответ, который правильно заполняет пронумерованные пробелы в блоке кода, чтобы выполнить это задание.
+
+A. sample, False, 0.5, 75 
+
+
+
+
+
+
+
+8)	Какая из следующих команд НЕ будет генерировать перетасовку(shuffle) данных в DataFrame, на каждом executor’е кластера?
+
+B. df.collect()
+
+
+
+
+
+
+
+
+9)	Когда Spark работает в режиме кластера, какое из следующих утверждений о нодах кластера верно?
+
+B. Драйвер запускается на любой рабочей ноде внутри кластера. 
+
+
+
+
+
+10)	Какое утверждение верно для Lineage Graph(RDD)?
+
+A. Lineage Graph представляет собой граф всех операций преобразования, которые необходимо выполнить при вызове операции action. 
+
+
+
+
+
+
+11)	Ниже представлен блок кода,который должен возвращать новый DataFrame со средним значением столбца sqft из StoresDF в столбце sqftMean. 
+
+Выберите ответ, который правильно заполняет пронумерованные пробелы в блоке кода, чтобы выполнить это задание.
+
+Code block:
+storesDF.__1__(__2__(__3__).alias("sqftMean"))
+
+A. 
+	1. agg
+	2. mean
+	3. col("sqft")
+
+
+
+
+
+
+
+
+12)	В каком порядке следует запускать приведенные ниже строки кода, чтобы создать и зарегистрировать пользовательскую функцию SQL с именем «ASSESS_PERFORMANCE» с помощью функции Python «assessPerformance» и применить ее к столбцу «customerSatistfaction» в таблице «stores»?
+
+Lines of code:
+1. spark.udf.register("ASSESS_PERFORMANCE", assessPerformance)
+2. spark.sql("SELECT customerSatisfaction, assessPerformance(customerSatisfaction) AS result FROM stores")
+3. spark.udf.register(assessPerformance, "ASSESS_PERFORMANCE")
+4. spark.sql("SELECT customerSatisfaction, ASSESS_PERFORMANCE(customerSatisfaction) AS result FROM stores")
+
+B. 1, 4
+
+
+
+
+
+
+13)	В каком порядке следует запускать приведенные ниже строки кода, чтобы создать UDF Python AssessmentPerformanceUDF() с использованием функции Python, возвращающей integer число «assessPerformance» и примените его к столбцу «customerSatisfaction» в DataFrame «storesDF»?
+
+Lines of code:
+1. assessPerformanceUDF = udf(assessPerformance, IntegerType)
+2. assessPerformanceUDF = spark.register.udf("ASSESS_PERFORMANCE", assessPerformance)
+3. assessPerformanceUDF = udf(assessPerformance, IntegerType())
+4. storesDF.withColumn("result", assessPerformanceUDF(col("customerSatisfaction")))
+5. storesDF.withColumn("result", assessPerformance(col("customerSatisfaction")))
+6. storesDF.withColumn("result", ASSESS_PERFORMANCE(col("customerSatisfaction")))
+
+A. 3, 4 
+
+
+
+
+
+
+14)	Какой из следующих блоков кода всегда будет возвращать новый 12-partition DataFrame из 4-partition DataFrame "storesDF"?
+
+C. storesDF.repartition(12) 
+
+
+
+
+
+
+
+15)	Какая из следующих операций выполняет позиционное объединение двух DataFrame'ов?
+
+E. DataFrame.union()
+ 
